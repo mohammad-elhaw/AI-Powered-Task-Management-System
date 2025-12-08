@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/AI/" />
+  <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Tasking/">
+    <Project Path="Modules/Tasking/Tasking.API/Tasking.API.csproj" Id="903ba9c2-293a-46b1-b29f-1d622116a2ae" />
+    <Project Path="Modules/Tasking/Tasking.Application/Tasking.Application.csproj" Id="913369f3-ace9-4ed0-8aba-426a6533d16f" />
+    <Project Path="Modules/Tasking/Tasking.Domain/Tasking.Domain.csproj" Id="b68b6853-7f76-4381-81af-9728bb0c736c" />
+    <Project Path="Modules/Tasking/Tasking.Infrastructure/Tasking.Infrastructure.csproj" Id="31708ad4-44f1-44fb-8a2d-5673cadee165" />
+  </Folder>
+  <Folder Name="/SharedKernel/">
+    <Project Path="SharedKernel/Shared.Application/Shared.Application.csproj" Id="f98fa19c-9ccb-424e-9af3-fc8640dc612e" />
+    <Project Path="SharedKernel/Shared.Domain/Shared.Domain.csproj" Id="32b7baa4-9a1e-4248-b7b6-6438e36b1b49" />
+    <Project Path="SharedKernel/Shared.Infrastructure/Shared.Infrastructure.csproj" Id="ff1440db-1980-4ff1-b3c4-bed8a72fb23c" />
+    <Project Path="SharedKernel/Shared.Messaging/Shared.Messaging.csproj" Id="04669736-5d83-4a73-8585-e89ca785aa67" />
+  </Folder>
+  <Project Path="TaskManagementSystem.Gateway/TaskManagementSystem.Gateway.csproj" />
+</Solution>
