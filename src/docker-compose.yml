@@ -1,0 +1,7 @@
+services:
+  taskManagementSystemDb:
+    image: postgres
+
+
+volumes:
+  postgres_taskManagementSystemDb:

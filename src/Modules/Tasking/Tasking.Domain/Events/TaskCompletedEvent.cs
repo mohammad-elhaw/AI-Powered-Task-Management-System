@@ -2,9 +2,4 @@
 
 namespace Tasking.Domain.Events;
 
-public record TaskCompletedEvent(Guid Id) : IDomainEvent
-{
-    public DateTime OccurredOn => DateTime.UtcNow;
-
-    public string EventName => nameof(TaskCompletedEvent);
-}
+public record TaskCompletedEvent(Aggregates.Task task) : IDomainEvent;

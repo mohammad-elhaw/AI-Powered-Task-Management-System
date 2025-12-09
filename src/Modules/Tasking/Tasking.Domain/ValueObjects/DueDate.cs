@@ -3,6 +3,7 @@
 public record DueDate
 {
     public DateTime Value { get; }
+    private DueDate() { }
     public DueDate(DateTime value)
     {
         Value = value.Date;

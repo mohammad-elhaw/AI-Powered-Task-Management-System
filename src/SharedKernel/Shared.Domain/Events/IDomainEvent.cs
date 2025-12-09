@@ -2,7 +2,7 @@
 
 public interface IDomainEvent
 {
-    public Guid Id { get; }
-    public DateTime OccurredOn { get; }
-    public string EventName { get; }
+    public Guid EventId => Guid.NewGuid();
+    public DateTime OccurredOn => DateTime.UtcNow;
+    public string EventName => GetType().AssemblyQualifiedName!;
 }

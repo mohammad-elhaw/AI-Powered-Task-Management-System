@@ -10,10 +10,4 @@
     <ProjectReference Include="..\..\..\SharedKernel\Shared.Domain\Shared.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\" />
-    <Folder Include="Aggregates\" />
-    <Folder Include="Events\" />
-  </ItemGroup>
-
 </Project>

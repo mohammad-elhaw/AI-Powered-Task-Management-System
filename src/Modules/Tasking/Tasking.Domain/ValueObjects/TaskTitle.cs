@@ -4,6 +4,7 @@ public record TaskTitle
 {
     public string Value { get; }
 
+    private TaskTitle() { }
     private TaskTitle(string value)
     {
         Value = value;

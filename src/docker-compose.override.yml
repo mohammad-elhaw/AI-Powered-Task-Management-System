@@ -1,0 +1,12 @@
+services:
+  taskManagementSystemDb:
+    container_name: taskManagementSystemDb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=taskmanagementdb
+    restart: always
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_taskManagementSystemDb:/var/lib/postgresql/data

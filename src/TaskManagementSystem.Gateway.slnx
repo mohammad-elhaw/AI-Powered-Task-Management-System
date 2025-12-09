@@ -13,5 +13,8 @@
     <Project Path="SharedKernel/Shared.Infrastructure/Shared.Infrastructure.csproj" Id="ff1440db-1980-4ff1-b3c4-bed8a72fb23c" />
     <Project Path="SharedKernel/Shared.Messaging/Shared.Messaging.csproj" Id="04669736-5d83-4a73-8585-e89ca785aa67" />
   </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
   <Project Path="TaskManagementSystem.Gateway/TaskManagementSystem.Gateway.csproj" />
 </Solution>

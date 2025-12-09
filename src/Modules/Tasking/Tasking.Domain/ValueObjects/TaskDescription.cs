@@ -3,6 +3,7 @@
 public record TaskDescription
 {
     public string Value { get; }
+    private TaskDescription() { }
     private TaskDescription(string value)
     {
         Value = value;

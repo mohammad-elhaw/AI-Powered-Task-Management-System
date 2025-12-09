@@ -9,7 +9,7 @@ public class Comment : Entity<int>
     public string Content { get; private set; }
     public DateTime CreatedAt { get; private set; }
     private Comment() { }
-    public Comment(Guid taskId, string author, string content)
+    internal Comment(Guid taskId, string author, string content)
     {
         TaskId = taskId;
         Author = author;
