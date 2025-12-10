@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Tasking.Domain\Tasking.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Queries\" />
+  </ItemGroup>
+
 </Project>

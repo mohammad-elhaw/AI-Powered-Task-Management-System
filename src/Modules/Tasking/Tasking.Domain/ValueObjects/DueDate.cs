@@ -4,7 +4,7 @@ public record DueDate
 {
     public DateTime Value { get; }
     private DueDate() { }
-    public DueDate(DateTime value)
+    private DueDate(DateTime value)
     {
         Value = value.Date;
     }

@@ -31,7 +31,8 @@ internal class TaskConfig : IEntityTypeConfiguration<Domain.Aggregates.Task>
         {
             items.ToTable("TaskItems");
             items.WithOwner().HasForeignKey(it => it.TaskId);
-            items.Property<int>(it => it.Id);
+            items.Property<int>(it => it.Id)
+                .ValueGeneratedOnAdd();
             items.HasKey(it => it.Id);
             items.Property(it => it.IsCompleted)
             .HasDefaultValue(false);
@@ -41,7 +42,8 @@ internal class TaskConfig : IEntityTypeConfiguration<Domain.Aggregates.Task>
         {
             comments.ToTable("TaskComments");
             comments.WithOwner().HasForeignKey(c => c.TaskId);
-            comments.Property<int>(c => c.Id);
+            comments.Property<int>(c => c.Id)
+                .ValueGeneratedOnAdd();
             comments.HasKey(c => c.Id);
             comments.Property(c => c.Content)
                 .HasMaxLength(1000);
