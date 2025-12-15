@@ -10,3 +10,33 @@ services:
       - "5433:5432"
     volumes:
       - postgres_taskManagementSystemDb:/var/lib/postgresql/data
+
+  identityDb:
+    container_name: identityDb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=identitydb
+    restart: always
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_identityDb:/var/lib/postgresql/data
+
+  identity:
+    container_name: identity
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://identityDb:5432/identitydb
+      - KC_DB_SCHEMA=identity
+      - KC_DB_USERNAME=postgres
+      - KC_DB_PASSWORD=admin
+    restart: always
+    depends_on:
+      - identityDb
+    ports:
+      - "9090:8080"
+    command:
+      - start-dev

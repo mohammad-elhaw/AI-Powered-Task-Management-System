@@ -1,7 +1,11 @@
 services:
   taskManagementSystemDb:
     image: postgres
-
+  identityDb:
+    image: postgres
+  identity:
+    image: quay.io/keycloak/keycloak:26.4.1
 
 volumes:
   postgres_taskManagementSystemDb:
+  postgres_identityDb:

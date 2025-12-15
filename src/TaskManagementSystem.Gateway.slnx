@@ -1,6 +1,12 @@
 <Solution>
   <Folder Name="/AI/" />
   <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Identity/">
+    <Project Path="Modules/Identity/Identity.API/Identity.API.csproj" Id="d30db8ef-9cc7-492b-a4c8-b3dd767d91c2" />
+    <Project Path="Modules/Identity/Identity.Application/Identity.Application.csproj" Id="594c60fe-9456-48f9-970d-039c21a7042b" />
+    <Project Path="Modules/Identity/Identity.Domain/Identity.Domain.csproj" Id="a3ab7e33-9aea-4369-9bbb-012e87e7cd09" />
+    <Project Path="Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" Id="8b01e500-b135-469b-b7a2-ee85dddf3120" />
+  </Folder>
   <Folder Name="/Modules/Tasking/">
     <Project Path="Modules/Tasking/Tasking.API/Tasking.API.csproj" Id="903ba9c2-293a-46b1-b29f-1d622116a2ae" />
     <Project Path="Modules/Tasking/Tasking.Application/Tasking.Application.csproj" Id="913369f3-ace9-4ed0-8aba-426a6533d16f" />

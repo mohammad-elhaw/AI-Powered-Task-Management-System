@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Modules\Identity\Identity.API\Identity.API.csproj" />
     <ProjectReference Include="..\Modules\Tasking\Tasking.API\Tasking.API.csproj" />
   </ItemGroup>
 
