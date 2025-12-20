@@ -1,7 +1,10 @@
-﻿using Identity.Domain.Repositories;
+﻿using Identity.Application.Abstractions;
+using Identity.Domain.Repositories;
 using Identity.Infrastructure.Database;
 using Identity.Infrastructure.Repositories;
 using Identity.Infrastructure.Services;
+using Identity.Infrastructure.Services.Roles;
+using Identity.Infrastructure.Services.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +25,16 @@ public static class ServiceCollectionExtension
 
         services.AddScoped<IRoleRepository, EfRoleRepository>();
         services.AddScoped<IUserRepository, EfUserRepository>();
-        services.AddHttpClient<IIdentityProvider, KeyCloakIdentityProvider>();
+        services.AddScoped<IUserReadRepository, UserReadRepository>();
+
+        services.AddScoped<IIdentityProvider, KeyCloakIdentityProvider>();
+        services.AddScoped<IKeycloakTokenProvider, KeycloakTokenProvider>();
+
+        services.AddTransient<KeycloakAuthHandler>();
+        services.AddHttpClient<KeycloakUserClient>()
+            .AddHttpMessageHandler<KeycloakAuthHandler>();
+        services.AddHttpClient<KeycloakRoleClient>()
+            .AddHttpMessageHandler<KeycloakAuthHandler>();
         return services;
     }
 }

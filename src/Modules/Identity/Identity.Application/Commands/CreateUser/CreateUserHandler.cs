@@ -1,4 +1,5 @@
-﻿using Identity.Application.Dtos;
+﻿using Identity.Application.Abstractions;
+using Identity.Application.Dtos;
 using Identity.Domain.Aggregates;
 using Identity.Domain.Repositories;
 using Shared.Application.Abstractions.CQRS;
@@ -58,7 +59,7 @@ public class CreateUserHandler
                 FirstName: user.Name.FirstName,
                 LastName: user.Name.LastName,
                 IsActive: user.IsActive,
-                RoleIds: user.UserRoles.Select(ur => ur.RoleId).ToList()
+                RoleNames: user.UserRoles.Select(ur => ur.Role.Name).ToList()
             )
         );
     }

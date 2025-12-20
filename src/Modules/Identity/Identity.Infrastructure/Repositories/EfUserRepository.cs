@@ -14,8 +14,16 @@ public class EfUserRepository(IdentityDbContext context)
         return Task.CompletedTask;
     }
 
+    public Task Delete(User user, CancellationToken cancellationToken)
+    {
+        context.Users.Remove(user);
+        return Task.CompletedTask;
+    }
+
     public async Task<User?> GetById(Guid id, CancellationToken cancellationToken)
-        => await context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+        => await context.Users
+        .Include(u => u.UserRoles)
+        .ThenInclude(ur => ur.Role).FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
     public async Task<int> SaveChanges(CancellationToken cancellationToken)
         => await context.SaveChangesAsync(cancellationToken);

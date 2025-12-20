@@ -2,7 +2,7 @@
 
 namespace Identity.API.User;
 
-[Route("api/user")]
+[Route("api/users")]
 public abstract class BaseController :API.BaseController
 {
 }
