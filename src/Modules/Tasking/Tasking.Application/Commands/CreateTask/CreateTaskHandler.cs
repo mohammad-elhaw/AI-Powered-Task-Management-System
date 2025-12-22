@@ -1,4 +1,5 @@
 ﻿using Shared.Application.Abstractions.CQRS;
+using Shared.Application.Results;
 using Tasking.Application.Dtos;
 using Tasking.Domain.Enums;
 using Tasking.Domain.Repositories;
@@ -9,7 +10,7 @@ namespace Tasking.Application.Commands.CreateTask;
 internal class CreateTaskHandler(ITaskRepository taskRepository)
     : ICommandHandler<CreateTaskCommand, CreateTaskResult>
 {
-    public async Task<CreateTaskResult> Handle(CreateTaskCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreateTaskResult>> Handle(CreateTaskCommand command, CancellationToken cancellationToken)
     {
         var task = Domain.Aggregates.Task.Create(
             title: TaskTitle.Create(command.Title),
@@ -53,6 +54,6 @@ internal class CreateTaskHandler(ITaskRepository taskRepository)
             )).ToList()
         );
 
-        return new CreateTaskResult(resultDto);
+        return Result<CreateTaskResult>.Success(new CreateTaskResult(resultDto));
     }
 }

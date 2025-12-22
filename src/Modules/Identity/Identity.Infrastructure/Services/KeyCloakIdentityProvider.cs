@@ -1,7 +1,9 @@
 ﻿using Identity.Application.Abstractions;
 using Identity.Application.Dtos;
+using Identity.Application.Errors;
 using Identity.Infrastructure.Services.Roles;
 using Identity.Infrastructure.Services.Users;
+using Shared.Application.Results;
 
 namespace Identity.Infrastructure.Services;
 
@@ -11,12 +13,12 @@ public sealed class KeyCloakIdentityProvider(
     : IIdentityProvider
 {
 
-    public async Task<string> CreateUser(string userName, string email, string firstName, 
+    public async Task<Result<string>> CreateUser(string userName, string email, string firstName, 
         string lastName, string tempPassword, CancellationToken cancellationToken)
     {
 
         if (await users.UserExists(userName, cancellationToken))
-            throw new InvalidOperationException($"User '{userName}' already exists.");
+            return Result<string>.Failure(UserErrors.UserAlreadyExists);
 
         var userPayload = new
         {
@@ -35,8 +37,10 @@ public sealed class KeyCloakIdentityProvider(
                 }
             }
         };
-
-        return await users.CreateUser(userPayload, cancellationToken);
+        
+        var keycloakId = await users.CreateUser(userPayload, cancellationToken);
+        return Result<string>.Success(keycloakId);
+        
     }
 
     

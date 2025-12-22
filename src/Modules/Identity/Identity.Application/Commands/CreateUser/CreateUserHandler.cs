@@ -3,6 +3,7 @@ using Identity.Application.Dtos;
 using Identity.Domain.Aggregates;
 using Identity.Domain.Repositories;
 using Shared.Application.Abstractions.CQRS;
+using Shared.Application.Results;
 
 namespace Identity.Application.Commands.CreateUser;
 
@@ -12,10 +13,10 @@ public class CreateUserHandler
     IIdentityProvider identityProvider)
     : ICommandHandler<CreateUserCommand, CreateUserResult>
 {
-    public async Task<CreateUserResult> Handle(CreateUserCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreateUserResult>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
         string tempPassword = "12345";
-        var keyCloakId = await identityProvider.CreateUser(
+        var result = await identityProvider.CreateUser(
             command.UserName,
             command.Email,
             command.FirstName,
@@ -23,7 +24,12 @@ public class CreateUserHandler
             tempPassword,
             cancellationToken);
 
-        var user = User.Create(Guid.NewGuid(), keyCloakId, 
+        if(result.IsFailure)
+            return Result<CreateUserResult>.Failure(result.Error);
+        
+
+
+        var user = User.Create(Guid.NewGuid(), result.Value!, 
             Domain.ValueObjects.Email.Create(command.Email),
             Domain.ValueObjects.FullName.Create(command.FirstName, command.LastName));
 
@@ -40,7 +46,7 @@ public class CreateUserHandler
 
                 await identityProvider.EnsureRealmRoleExists(role.Name, cancellationToken);
 
-                await identityProvider.AssignRole(keyCloakId, role.Name, cancellationToken);
+                await identityProvider.AssignRole(result.Value!, role.Name, cancellationToken);
                 user.AssignRole(role);
             }
         }
@@ -49,7 +55,7 @@ public class CreateUserHandler
         await userRepository.SaveChanges(cancellationToken);
         await roleRepository.SaveChanges(cancellationToken);
 
-        return new CreateUserResult
+        return Result<CreateUserResult>.Success(new CreateUserResult
         (
             UserDto: new UserDto
             (
@@ -61,6 +67,6 @@ public class CreateUserHandler
                 IsActive: user.IsActive,
                 RoleNames: user.UserRoles.Select(ur => ur.Role.Name).ToList()
             )
-        );
+        ));
     }
 }

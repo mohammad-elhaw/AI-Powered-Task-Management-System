@@ -1,4 +1,5 @@
 ﻿using Shared.Application.Abstractions.CQRS;
+using Shared.Application.Results;
 using Tasking.Domain.Repositories;
 
 namespace Tasking.Application.Commands.AddTaskItem;
@@ -6,7 +7,7 @@ namespace Tasking.Application.Commands.AddTaskItem;
 internal class AddTaskItemHandler(ITaskRepository repository)
     : ICommandHandler<AddTaskItemCommand, AddTaskItemResult>
 {
-    public async Task<AddTaskItemResult> Handle(AddTaskItemCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AddTaskItemResult>> Handle(AddTaskItemCommand request, CancellationToken cancellationToken)
     {
         var task = await repository.GetTask(request.TaskId, cancellationToken);
 
@@ -17,7 +18,7 @@ internal class AddTaskItemHandler(ITaskRepository repository)
         var items = task.Items;
         var addedItem = items[items.Count - 1];
 
-        return new AddTaskItemResult
+        return Result<AddTaskItemResult>.Success(new AddTaskItemResult
         (
             TaskItemDto: new Dtos.TaskItemDto
             (
@@ -25,7 +26,8 @@ internal class AddTaskItemHandler(ITaskRepository repository)
                 Content: addedItem.Content,
                 IsCompleted: addedItem.IsCompleted
             )
-        );
+        ));
 
     }
+
 }

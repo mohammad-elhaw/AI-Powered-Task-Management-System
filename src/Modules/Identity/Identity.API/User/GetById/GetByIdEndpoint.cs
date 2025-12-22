@@ -15,6 +15,8 @@ public class GetByIdEndpoint(IMediator mediator)
     {
         var result = await mediator.Send(new GetByIdQuery(UserId));
 
-        return Ok(new GetByIdResponse(result.UserDto));
+        var response = MapResult(result, r => new GetByIdResponse(r.UserDto));
+
+        return HandleResult(response, StatusCodes.Status200OK);
     }
 }

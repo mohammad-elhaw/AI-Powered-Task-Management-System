@@ -14,8 +14,8 @@ public class CreateUserEndpoint(IMediator mediator)
     {
         var result = await mediator.Send(request.ToCommand());
 
-        return Created(
-            uri: string.Empty,
-            value: new CreateUserResponse(result.UserDto));
+        var response = MapResult(result, r => new CreateUserResponse(r.UserDto));
+
+        return HandleResult(response, StatusCodes.Status201Created);
     }
 }

@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using Shared.Application.Results;
 
 namespace Shared.Application.Abstractions.CQRS;
 
-public interface ICommand : IRequest<Unit>
+public interface ICommand : IRequest<Result<Unit>>
 {
 }
 
-public interface ICommand<out TResponse> : IRequest<TResponse>
+public interface ICommand<TResponse> : IRequest<Result<TResponse>>
 {
 }
