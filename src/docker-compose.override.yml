@@ -40,3 +40,13 @@ services:
       - "9090:8080"
     command:
       - start-dev
+
+  messagebus:
+    container_name: messagebus
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"

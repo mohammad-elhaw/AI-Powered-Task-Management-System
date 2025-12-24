@@ -14,8 +14,8 @@ public class UserRole
 
     public UserRole(User user, Role role)
     {
-        User = user ?? throw new ArgumentNullException(nameof(user));
-        Role = role ?? throw new ArgumentNullException(nameof(role));
+        User = user;
+        Role = role;
         UserId = user.Id;
         RoleId = role.Id;
     }

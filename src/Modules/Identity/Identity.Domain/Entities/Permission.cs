@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Abstractions;
+﻿using Identity.Domain.Exceptions.Permission;
+using Shared.Domain.Abstractions;
 
 namespace Identity.Domain.Entities;
 
@@ -9,7 +10,7 @@ public class Permission : Entity<int>
     public Permission(int id, string name)
     {
         if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Permission name cannot be null or empty.", nameof(name));
+            throw new InvalidPermissionNameException();
 
         Id = id;
         Name = name;

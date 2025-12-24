@@ -15,58 +15,73 @@ public class CreateUserHandler
 {
     public async Task<Result<CreateUserResult>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
-        string tempPassword = "12345";
-        var result = await identityProvider.CreateUser(
-            command.UserName,
-            command.Email,
-            command.FirstName,
-            command.LastName,
-            tempPassword,
-            cancellationToken);
+        string? createdKeycloadId = null;
+        User? createdUser = null;
 
-        if(result.IsFailure)
-            return Result<CreateUserResult>.Failure(result.Error);
-        
-
-
-        var user = User.Create(Guid.NewGuid(), result.Value!, 
-            Domain.ValueObjects.Email.Create(command.Email),
-            Domain.ValueObjects.FullName.Create(command.FirstName, command.LastName));
-
-        if(command.RoleNames != null && command.RoleNames.Count != 0)
+        try
         {
-            foreach(var roleName in command.RoleNames.Distinct(StringComparer.OrdinalIgnoreCase))
+            string tempPassword = "12345";
+            var keycloakIdResult = await identityProvider.CreateUser(
+                command.UserName,
+                command.Email,
+                command.FirstName,
+                command.LastName,
+                tempPassword,
+                cancellationToken);
+
+            createdKeycloadId = keycloakIdResult.Value!;
+
+            var user = User.Create(Guid.NewGuid(), keycloakIdResult.Value!, 
+                Domain.ValueObjects.Email.Create(command.Email),
+                Domain.ValueObjects.FullName.Create(command.FirstName, command.LastName));
+
+            createdUser = user;
+
+            if (command.RoleNames != null && command.RoleNames.Count != 0)
             {
-                var role = await roleRepository.GetByName(roleName, cancellationToken);
-                if(role == null)
+                foreach (var roleName in command.RoleNames.Distinct(StringComparer.OrdinalIgnoreCase))
                 {
-                    role = Role.Create(Guid.NewGuid(), roleName);
-                    await roleRepository.Add(role, cancellationToken);
+                    var role = await roleRepository.GetByName(roleName, cancellationToken);
+                    if (role == null)
+                    {
+                        role = Role.Create(Guid.NewGuid(), roleName);
+                        await roleRepository.Add(role, cancellationToken);
+                    }
+
+                    await identityProvider.EnsureRealmRoleExists(role.Name, cancellationToken);
+
+                    await identityProvider.AssignRole(keycloakIdResult.Value!, role.Name, cancellationToken);
+                    user.AssignRole(role);
                 }
-
-                await identityProvider.EnsureRealmRoleExists(role.Name, cancellationToken);
-
-                await identityProvider.AssignRole(result.Value!, role.Name, cancellationToken);
-                user.AssignRole(role);
             }
-        }
 
-        await userRepository.Add(user, cancellationToken);
-        await userRepository.SaveChanges(cancellationToken);
-        await roleRepository.SaveChanges(cancellationToken);
+            await userRepository.Add(user, cancellationToken);
+            await userRepository.SaveChanges(cancellationToken);
+            await roleRepository.SaveChanges(cancellationToken);
 
-        return Result<CreateUserResult>.Success(new CreateUserResult
-        (
-            UserDto: new UserDto
+            return Result<CreateUserResult>.Success(new CreateUserResult
             (
-                Id: user.Id,
-                KeycloakId: user.KeycloakId,
-                Email: user.Email.Value,
-                FirstName: user.Name.FirstName,
-                LastName: user.Name.LastName,
-                IsActive: user.IsActive,
-                RoleNames: user.UserRoles.Select(ur => ur.Role.Name).ToList()
-            )
-        ));
+                UserDto: new UserDto
+                (
+                    Id: user.Id,
+                    KeycloakId: user.KeycloakId,
+                    Email: user.Email.Value,
+                    FirstName: user.Name.FirstName,
+                    LastName: user.Name.LastName,
+                    IsActive: user.IsActive,
+                    RoleNames: user.UserRoles.Select(ur => ur.Role.Name).ToList()
+                )
+            ));
+        }
+        catch(Exception ex)
+        {
+            if (!string.IsNullOrEmpty(createdKeycloadId))
+                await identityProvider.DeleteUser(createdKeycloadId, cancellationToken);
+            
+            if (createdUser != null)
+                await userRepository.Delete(createdUser, cancellationToken);
+
+            return Result<CreateUserResult>.Failure(new Error("CreatedUserFailed", ex.Message, default));
+        }
     }
 }

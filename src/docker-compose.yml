@@ -5,6 +5,8 @@ services:
     image: postgres
   identity:
     image: quay.io/keycloak/keycloak:26.4.1
+  messagebus:
+    image: rabbitmq:management
 
 volumes:
   postgres_taskManagementSystemDb:

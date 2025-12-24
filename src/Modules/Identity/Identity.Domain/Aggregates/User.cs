@@ -1,4 +1,5 @@
 ﻿using Identity.Domain.Entities;
+using Identity.Domain.Exceptions.User;
 using Identity.Domain.ValueObjects;
 using Shared.Domain.Abstractions;
 
@@ -18,8 +19,8 @@ public class User : AggregateRoot<Guid>
 
     public static User Create(Guid id, string keycloakId, Email email, FullName name)
     {
-        if (string.IsNullOrWhiteSpace(keycloakId.ToString()))
-            throw new ArgumentException("KeycloakId cannot be empty.", nameof(keycloakId));
+        if (string.IsNullOrWhiteSpace(keycloakId))
+            throw new InvalidUserKeycloakIdException();
 
         var user = new User
         {

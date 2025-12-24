@@ -1,6 +1,7 @@
 using Identity.API;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Infrastructure.Extensions;
+using Shared.Messaging;
 using Tasking.API;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,8 @@ builder.Services.AddIdentityAPI(builder.Configuration);
 builder.Services.AddMediatorAssemblies(
     typeof(Tasking.Application.ServiceCollectionExtension).Assembly,
     typeof(Identity.Application.ServiceCollectionExtension).Assembly);
+
+builder.Services.AddCapMessaging(builder.Configuration);
 
 var app = builder.Build();
 app.UseHttpsRedirection();

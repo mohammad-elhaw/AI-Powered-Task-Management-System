@@ -1,4 +1,5 @@
 ﻿using Identity.Domain.Entities;
+using Identity.Domain.Exceptions.Role;
 using Shared.Domain.Abstractions;
 
 namespace Identity.Domain.Aggregates;
@@ -13,6 +14,9 @@ public class Role : AggregateRoot<Guid>
 
     private Role(Guid id, string name)
     {
+        if(string.IsNullOrEmpty(name))
+            throw new InvalidRoleNameException();
+
         Id = id;
         Name = name;
     }

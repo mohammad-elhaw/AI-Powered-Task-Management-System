@@ -1,4 +1,6 @@
-﻿namespace Identity.Domain.ValueObjects;
+﻿using Identity.Domain.Exceptions.User;
+
+namespace Identity.Domain.ValueObjects;
 
 public record FullName
 {
@@ -15,9 +17,9 @@ public record FullName
     public static FullName Create(string firstName, string lastName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            throw new ArgumentNullException("First name can not be empty");
+            throw new InvalidUserFullNameException("First name can not be empty");
         if (string.IsNullOrWhiteSpace(lastName))
-            throw new ArgumentNullException("Last name can not be empty");
+            throw new InvalidUserFullNameException("Last name can not be empty");
         return new FullName(firstName.Trim(), lastName.Trim());
     }
 }
