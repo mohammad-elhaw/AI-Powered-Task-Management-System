@@ -1,5 +1,6 @@
 using Identity.API;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Infrastructure.Events;
 using Shared.Infrastructure.Extensions;
 using Shared.Messaging;
 using Tasking.API;
@@ -23,6 +24,7 @@ builder.Services.AddMediatorAssemblies(
     typeof(Identity.Application.ServiceCollectionExtension).Assembly);
 
 builder.Services.AddCapMessaging(builder.Configuration);
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
 var app = builder.Build();
 app.UseHttpsRedirection();

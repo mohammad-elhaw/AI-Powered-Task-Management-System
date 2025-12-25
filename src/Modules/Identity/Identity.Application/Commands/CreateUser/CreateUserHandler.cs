@@ -29,6 +29,9 @@ public class CreateUserHandler
                 tempPassword,
                 cancellationToken);
 
+            if(keycloakIdResult.IsFailure)
+                return Result<CreateUserResult>.Failure(keycloakIdResult.Error);
+
             createdKeycloadId = keycloakIdResult.Value!;
 
             var user = User.Create(Guid.NewGuid(), keycloakIdResult.Value!, 

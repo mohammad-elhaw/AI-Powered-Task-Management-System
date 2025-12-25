@@ -1,11 +1,14 @@
 ﻿using Identity.Domain.Aggregates;
 using Identity.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Shared.Infrastructure;
+using Shared.Infrastructure.Events;
 
 namespace Identity.Infrastructure.Database;
 
-public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) 
-    : DbContext(options)
+public class IdentityDbContext(DbContextOptions<IdentityDbContext> options,
+    IDomainEventDispatcher dispatcher) 
+    : ModuleDbContext(options, dispatcher)
 {
 
     public DbSet<User> Users => Set<User>();

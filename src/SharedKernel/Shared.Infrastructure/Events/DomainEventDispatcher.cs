@@ -11,7 +11,7 @@ public class DomainEventDispatcher(IMediator mediator)
     {
         foreach(var domainEvent in domainEvents)
         {
-            await mediator.Publish(domainEvent);
+            await mediator.Publish(new DomainEventNotification(domainEvent));
         }
     }
 }

@@ -1,9 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Shared.Infrastructure;
+using Shared.Infrastructure.Events;
 
 namespace Tasking.Infrastructure.Database;
 
-public class TaskingDbContext(DbContextOptions<TaskingDbContext> options) 
-    : DbContext(options)
+public class TaskingDbContext(
+    DbContextOptions<TaskingDbContext> options,
+    IDomainEventDispatcher dispatcher) 
+    : ModuleDbContext(options, dispatcher)
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

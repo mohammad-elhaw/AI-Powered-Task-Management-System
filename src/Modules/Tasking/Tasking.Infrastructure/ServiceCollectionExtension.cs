@@ -20,13 +20,6 @@ public static class ServiceCollectionExtension
             opts.UseNpgsql(config.GetConnectionString("Database"));
         });
 
-        //services.AddCap(opts =>
-        //{
-        //    opts.UsePostgreSql(config.GetConnectionString("Database")!);
-        //    opts.UseRabbitMQ(config.GetConnectionString("MessageBroker")!);
-        //});
-
-        //services.AddScoped<IMessageBus, CapMessageBus>();
         services.AddScoped<ITaskRepository, TaskRepository>();
 
         return services;
