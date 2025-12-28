@@ -5,11 +5,10 @@ namespace Shared.Messaging.CAP;
 
 public class CapMessageBus(ICapPublisher capPublisher) : IMessageBus
 {
-    public async Task Publish<TIntegrationEvent>(TIntegrationEvent @event, 
+    public async Task Publish<TIntegrationEvent>(string eventName, TIntegrationEvent @event, 
         CancellationToken cancellationToken = default) 
         where TIntegrationEvent : IIntegrationEvent
     {
-        string eventName = @event.GetType().Name;
         await capPublisher.PublishAsync(eventName, @event, cancellationToken: cancellationToken);
     }
 }

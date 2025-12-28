@@ -16,7 +16,7 @@ public class GetAllUsersEndpoint(IMediator mediator)
         var result = await mediator.Send(new GetUsersQuery());
         return Ok(new GetAllUsersResponse
         (
-            [.. result.Users]
+            result.ToGetAllUsersResponse().Data
         ));
     }
 }

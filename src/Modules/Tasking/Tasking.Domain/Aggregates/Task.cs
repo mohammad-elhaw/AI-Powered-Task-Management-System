@@ -38,8 +38,12 @@ public class Task : AggregateRoot<Guid>
             DueDate = dueDate,
             Status = Enums.TaskStatus.Pending
         };
-
-        task.RaiseDomainEvent(new TaskCreatedEvent(task));
+        //Todo: we must add AssignedUserId property and set it here
+        task.RaiseDomainEvent(
+            new TaskCreatedDomainEvent(
+                task.Id,
+                task.Id,
+                task.Title.Value));
 
         return task;
     }

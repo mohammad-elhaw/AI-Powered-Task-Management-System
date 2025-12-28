@@ -10,6 +10,9 @@ public class ModuleDbContext(DbContextOptions options,
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
 
+        //we need to pass transaction to cap 
+        using var transaction = await Database.BeginTransactionAsync(cancellationToken);
+
         var domainEvents = ChangeTracker
             .Entries<AggregateRoot<Guid>>()
             .Select(e => e.Entity)
@@ -24,6 +27,11 @@ public class ModuleDbContext(DbContextOptions options,
         if (domainEvents.Count != 0 && dispatcher != null)
             await dispatcher.Dispatch(domainEvents);    
         
-        return await base.SaveChangesAsync(cancellationToken);
+        var modifiedRowCount =await base.SaveChangesAsync(cancellationToken);
+
+        await transaction.CommitAsync(cancellationToken);
+
+        return modifiedRowCount;
+       
     }
 }

@@ -1,5 +1,6 @@
-﻿using Identity.Application.Abstractions;
-using Identity.Application.Dtos;
+﻿using Identity.Application.Abstractions.IdentityProvider;
+using Identity.Application.Abstractions.IdentityProvider.CreateUser;
+using Identity.Application.Abstractions.IdentityProvider.GetAllUsers;
 using Identity.Application.Errors;
 using Identity.Infrastructure.Services.Roles;
 using Identity.Infrastructure.Services.Users;
@@ -7,32 +8,31 @@ using Shared.Application.Results;
 
 namespace Identity.Infrastructure.Services;
 
-public sealed class KeyCloakIdentityProvider(
+internal sealed class KeyCloakIdentityProvider(
     KeycloakUserClient users,
     KeycloakRoleClient roles)
     : IIdentityProvider
 {
 
-    public async Task<Result<string>> CreateUser(string userName, string email, string firstName, 
-        string lastName, string tempPassword, CancellationToken cancellationToken)
+    public async Task<Result<string>> CreateUser(Request request, CancellationToken cancellationToken)
     {
 
-        if (await users.UserExists(userName, cancellationToken))
+        if (await users.UserExists(new UserExistsRequest(request.UserName), cancellationToken))
             return Result<string>.Failure(UserErrors.UserAlreadyExists);
 
         var userPayload = new
         {
-            username = userName,
-            email = email,
-            firstName = firstName,
-            lastName = lastName,
+            username = request.UserName,
+            email = request.Email,
+            firstName = request.FirstName,
+            lastName = request.LastName,
             enabled = true,
             credentials = new[]
             {
                 new
                 {
                     type = "password",
-                    value = tempPassword,
+                    value = request.TempPassword,
                     temporary = true
                 }
             }
@@ -48,11 +48,11 @@ public sealed class KeyCloakIdentityProvider(
         => await users.DeleteUser(keyCloakUserId, cancellationToken);
 
 
-    public async Task<IReadOnlyList<UserDto>> GetAllUsers(CancellationToken cancellationToken)
+    public async Task<Response> GetAllUsers(CancellationToken cancellationToken)
     {
         var keyCloakUsers = await users.GetAllUsers(cancellationToken);
 
-        return keyCloakUsers.Select(u => new UserDto
+        var response = keyCloakUsers.Select(u => new UserDto
         (
             Id: Guid.Empty,
             KeycloakId: u.Id,
@@ -62,6 +62,8 @@ public sealed class KeyCloakIdentityProvider(
             IsActive: u.Enabled,
             RoleNames : new List<string>()
         )).ToList();
+
+        return new Response(response);
     }
 
     public async Task EnsureRealmRoleExists(string roleName, CancellationToken cancellationToken)

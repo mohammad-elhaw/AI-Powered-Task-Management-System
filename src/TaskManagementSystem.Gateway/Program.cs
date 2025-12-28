@@ -24,7 +24,7 @@ builder.Services.AddMediatorAssemblies(
     typeof(Identity.Application.ServiceCollectionExtension).Assembly);
 
 builder.Services.AddCapMessaging(builder.Configuration);
-builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+builder.Services.AddDispatcher();
 
 var app = builder.Build();
 app.UseHttpsRedirection();

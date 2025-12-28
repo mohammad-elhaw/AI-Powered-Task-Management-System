@@ -1,86 +1,76 @@
-﻿using Identity.Application.Abstractions;
-using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
-using System.Text.Json;
+﻿using Identity.Infrastructure.Services.KeycloakClient;
+using MediatR;
 
 namespace Identity.Infrastructure.Services.Roles;
 
-public sealed class KeycloakRoleClient(
-    HttpClient httpClient,
-    IConfiguration configuration,
-    IKeycloakTokenProvider keycloakTokenProvider)
+internal sealed class KeycloakRoleClient(
+    IClient keycloakClient)
 {
-
-    private const string RealmConfigKey = "KeyCloak:Realm";
-    private const string BaseUrlConfigKey = "KeyCloak:BaseUrl";
 
     public async Task AssignRole(string keyCloakUserId, string roleName, CancellationToken cancellationToken)
     {
-        await keycloakTokenProvider.GetAccessToken(cancellationToken);
-        var realm = configuration[RealmConfigKey];
-        var baseUrl = configuration[BaseUrlConfigKey];
+        var endpoint = "/admin/realms/{{0}}/roles/{0}";
+        var path = string.Format(endpoint, roleName);
 
-        var roleResponse = await httpClient
-            .GetAsync($"{baseUrl}/admin/realms/{realm}/roles/{roleName}", cancellationToken);
-        roleResponse.EnsureSuccessStatusCode();
+        var roleResponse = await keycloakClient.SendAsync<KeycloakRoleDto>(
+            new BaseRequest(path), cancellationToken)
+            ?? throw new InvalidOperationException("Role response was null.");
 
-        var role = JsonDocument
-            .Parse(await roleResponse.Content.ReadAsStringAsync(cancellationToken))
-            .RootElement;
+        var assignEndpoint = "/admin/realms/{{0}}/users/{0}/role-mappings/realm";
+        var assignPath = string.Format(assignEndpoint, keyCloakUserId);
 
-        var roleRepresentation = new[]
+        var payload = new[]
         {
             new
             {
-                id = role.GetProperty("id").GetString(),
-                name = role.GetProperty("name").GetString()
+                id = roleResponse.Id,
+                name = roleResponse.Name
             }
         };
 
-        var assignEndpoint = $"{baseUrl}/admin/realms/{realm}/users/{keyCloakUserId}/role-mappings/realm";
-        var assignResponse = await httpClient
-            .PostAsJsonAsync(assignEndpoint, roleRepresentation, cancellationToken);
+        await keycloakClient.SendAsync<Unit>(
+            new BaseRequest(
+                assignPath, 
+                body: payload, method: HttpMethod.Post),
+                cancellationToken);
 
-        assignResponse.EnsureSuccessStatusCode();
     }
 
 
     public async Task EnsureRealmRoleExists(string roleName, CancellationToken cancellationToken)
     {
-        await keycloakTokenProvider.GetAccessToken(cancellationToken);
-        var realm = configuration[RealmConfigKey]!;
-        var baseUrl = configuration[BaseUrlConfigKey]!;
 
-        var rolesEndpoint = $"{baseUrl}/admin/realms/{realm}/roles/{roleName}";
+        var endpoint = "/admin/realms/{{0}}/roles/{0}";
+        var path = string.Format(endpoint, roleName);
 
-        var r = await httpClient.GetAsync(rolesEndpoint, cancellationToken);
-        if (r.IsSuccessStatusCode) return; // exists
+        var r = await keycloakClient.SendAsync<HttpResponseMessage>(
+            new BaseRequest(path), cancellationToken);
+        if (r!.IsSuccessStatusCode) return; // exists
 
-        var createEndpoint = $"{baseUrl}/admin/realms/{realm}/roles";
+        var createEndpoint = "/admin/realms/{0}/roles";
         var payload = new { name = roleName };
-        var createResp = await httpClient.PostAsJsonAsync(createEndpoint, payload, cancellationToken);
-        createResp.EnsureSuccessStatusCode();
+        await keycloakClient.SendAsync<HttpResponseMessage>(
+            new BaseRequest(
+                createEndpoint, 
+                body: payload, 
+                method: HttpMethod.Post)
+            , cancellationToken);
     }
 
     public async Task<List<string>> GetUserRoles(
         string keycloakUserId,
         CancellationToken cancellationToken)
     {
-        await keycloakTokenProvider.GetAccessToken(cancellationToken);
-
-        var realm = configuration[RealmConfigKey]!;
-        var baseUrl = configuration[BaseUrlConfigKey]!.TrimEnd('/');
 
         var endpoint =
-            $"{baseUrl}/admin/realms/{realm}/users/{keycloakUserId}/role-mappings/realm";
+            "/admin/realms/{{0}}/users/{0}/role-mappings/realm";
 
-        var response = await httpClient.GetAsync(endpoint, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        var path = string.Format(endpoint, keycloakUserId);
 
-        var roles = await response.Content
-            .ReadFromJsonAsync<List<KeycloakRoleDto>>(cancellationToken: cancellationToken);
+        var response = await keycloakClient.SendAsync<List<KeycloakRoleDto>>(
+            new BaseRequest(path), cancellationToken);
 
-        return roles?.Select(r => r.Name).ToList() ?? [];
+        return response?.Select(r => r.Name).ToList() ?? [];
     }
 
 }

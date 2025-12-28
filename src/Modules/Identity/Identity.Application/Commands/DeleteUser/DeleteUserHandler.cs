@@ -1,4 +1,4 @@
-﻿using Identity.Application.Abstractions;
+﻿using Identity.Application.Abstractions.IdentityProvider;
 using Identity.Domain.Repositories;
 using MediatR;
 using Shared.Application.Abstractions.CQRS;

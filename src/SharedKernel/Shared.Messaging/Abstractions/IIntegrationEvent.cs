@@ -2,7 +2,7 @@
 
 public interface IIntegrationEvent
 {
-    public Guid EventId { get; }
-    public DateTime OccurredOn { get; }
-    public string EventType { get; }
+    public Guid EventId => Guid.NewGuid();
+    public DateTime OccurredOn => DateTime.UtcNow;
+    public string EventType => typeof(IIntegrationEvent).Name;
 }

@@ -1,11 +1,13 @@
-﻿using FluentValidation;
+﻿using DotNetCore.CAP.Transport;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Behaviors;
+using Shared.Infrastructure.Events;
 using System.Reflection;
 
 namespace Shared.Infrastructure.Extensions;
 
-public static class MediatorExtensions
+public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddMediatorAssemblies(this IServiceCollection services,
         params Assembly[] assemblies)
@@ -21,6 +23,12 @@ public static class MediatorExtensions
         });
         services.AddValidatorsFromAssemblies(assemblies);
 
+        return services;
+    }
+
+    public static IServiceCollection AddDispatcher(this IServiceCollection services)
+    {
+        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         return services;
     }
 }

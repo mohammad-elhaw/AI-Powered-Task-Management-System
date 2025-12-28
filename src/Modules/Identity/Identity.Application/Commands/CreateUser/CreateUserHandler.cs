@@ -1,4 +1,5 @@
-﻿using Identity.Application.Abstractions;
+﻿using Identity.Application.Abstractions.IdentityProvider;
+using Identity.Application.Abstractions.IdentityProvider.CreateUser;
 using Identity.Application.Dtos;
 using Identity.Domain.Aggregates;
 using Identity.Domain.Repositories;
@@ -22,11 +23,12 @@ public class CreateUserHandler
         {
             string tempPassword = "12345";
             var keycloakIdResult = await identityProvider.CreateUser(
+                new Request(
                 command.UserName,
                 command.Email,
                 command.FirstName,
                 command.LastName,
-                tempPassword,
+                tempPassword),
                 cancellationToken);
 
             if(keycloakIdResult.IsFailure)

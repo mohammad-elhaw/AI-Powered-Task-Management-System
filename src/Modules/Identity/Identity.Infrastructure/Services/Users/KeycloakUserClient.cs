@@ -1,62 +1,36 @@
-﻿using Identity.Application.Abstractions;
-using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
-using System.Text.Json;
+﻿using Identity.Infrastructure.Services.KeycloakClient;
 
 namespace Identity.Infrastructure.Services.Users;
 
-public sealed class KeycloakUserClient(
-    HttpClient httpClient,
-    IConfiguration configuration,
-    IKeycloakTokenProvider keycloakTokenProvider)
+internal sealed class KeycloakUserClient(
+    IClient keycloakClient)
 {
-
-    private const string RealmConfigKey = "KeyCloak:Realm";
-    private const string BaseUrlConfigKey = "KeyCloak:BaseUrl";
-
-    public async Task<bool> UserExists(string userName, CancellationToken cancellationToken)
+    public async Task<bool> UserExists(UserExistsRequest request, CancellationToken cancellationToken)
     {
-        await keycloakTokenProvider.GetAccessToken(cancellationToken);
-        var realm = configuration[RealmConfigKey]!;
-        var baseUrl = configuration[BaseUrlConfigKey]!;
+        var path = "/admin/realms/{0}/users";
+        var response = await keycloakClient.SendAsync<List<KeycloakUserDto>>(
+            new BaseRequest(path,queryParameters:request.ToQueryParameters()), cancellationToken);
 
-        var usersEndpoint = $"{baseUrl}/admin/realms/{realm}/users?username={Uri.EscapeDataString(userName)}";
-        var response = await httpClient.GetAsync(usersEndpoint, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var users = JsonDocument
-            .Parse(await response.Content.ReadAsStringAsync(cancellationToken)).RootElement;
-        return users.GetArrayLength() > 0;
+        return response is { Count: > 0 };
     }
 
     public async Task<IReadOnlyList<KeycloakUserDto>> GetAllUsers(CancellationToken cancellationToken)
     {
-        await keycloakTokenProvider.GetAccessToken(cancellationToken);
-        var realm = configuration[RealmConfigKey]!;
-        var baseUrl = configuration[BaseUrlConfigKey]!;
-        var endpoint = $"{baseUrl}/admin/realms/{realm}/users";
-        var response = await httpClient.GetAsync(endpoint, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        var path = "/admin/realms/{0}/users";
+        var response = await keycloakClient.SendAsync<IReadOnlyList<KeycloakUserDto>>(
+            new BaseRequest(path), cancellationToken);
 
-        var json = await response.Content.ReadAsStringAsync(cancellationToken);
-        return JsonSerializer
-            .Deserialize<List<KeycloakUserDto>>(
-                json,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
-
+        return response ?? [];
     }
 
     public async Task<string> CreateUser(object payload, CancellationToken cancellationToken)
     {
-        await keycloakTokenProvider.GetAccessToken(cancellationToken);
-        var realm = configuration[RealmConfigKey]!;
-        var baseUrl = configuration[BaseUrlConfigKey]!;
-        var usersEndpoint = $"{baseUrl}/admin/realms/{realm}/users";
+        var usersEndpoint = "/admin/realms/{0}/users";
 
-        var response = await httpClient.PostAsJsonAsync(usersEndpoint, payload, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        var response = await keycloakClient.SendAsync<HttpResponseMessage>(
+            new BaseRequest(usersEndpoint, body: payload, method:HttpMethod.Post), cancellationToken);
 
-        var locationHeader = response.Headers.Location?.ToString();
+        var locationHeader = response?.Headers.Location?.ToString();
         if (string.IsNullOrEmpty(locationHeader))
             throw new ArgumentException("Keycloak did not return Location header with user id");
 
@@ -67,11 +41,10 @@ public sealed class KeycloakUserClient(
 
     public async Task DeleteUser(string keyCloakUserId, CancellationToken cancellationToken)
     {
-        await keycloakTokenProvider.GetAccessToken(cancellationToken);
-        var realm = configuration[RealmConfigKey]!;
-        var baseUrl = configuration[BaseUrlConfigKey]!;
-        var deleteEndpoint = $"{baseUrl}/admin/realms/{realm}/users/{keyCloakUserId}";
-        var response = await httpClient.DeleteAsync(deleteEndpoint, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        var deleteEndpoint = "/admin/realms/{{0}}/users/{0}";
+
+        var path = string.Format(deleteEndpoint, keyCloakUserId);
+        await keycloakClient.SendAsync<HttpResponseMessage>(
+            new BaseRequest(path, method: HttpMethod.Delete), cancellationToken);
     }
 }

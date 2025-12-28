@@ -1,8 +1,10 @@
 ﻿using Identity.Application.Abstractions;
+using Identity.Application.Abstractions.IdentityProvider;
 using Identity.Domain.Repositories;
 using Identity.Infrastructure.Database;
 using Identity.Infrastructure.Repositories;
 using Identity.Infrastructure.Services;
+using Identity.Infrastructure.Services.KeycloakClient;
 using Identity.Infrastructure.Services.Roles;
 using Identity.Infrastructure.Services.Users;
 using Microsoft.EntityFrameworkCore;
@@ -29,12 +31,20 @@ public static class ServiceCollectionExtension
 
         services.AddScoped<IIdentityProvider, KeyCloakIdentityProvider>();
         services.AddScoped<IKeycloakTokenProvider, KeycloakTokenProvider>();
+        services.AddScoped<KeycloakUserClient>();
+        services.AddScoped<KeycloakRoleClient>();
 
+        var keycloakAddress = config.GetSection("KeyCloak:BaseUrl")!;
         services.AddTransient<KeycloakAuthHandler>();
-        services.AddHttpClient<KeycloakUserClient>()
-            .AddHttpMessageHandler<KeycloakAuthHandler>();
-        services.AddHttpClient<KeycloakRoleClient>()
-            .AddHttpMessageHandler<KeycloakAuthHandler>();
+        services.AddHttpClient<IClient, Client>("keycloakUserClient", conf =>
+        {
+            conf.BaseAddress = new Uri(keycloakAddress.Value!);
+        }).AddHttpMessageHandler<KeycloakAuthHandler>();
+
+        services.AddScoped<IClient, Client>();
+
+        //services.AddHttpClient<KeycloakRoleClient>()
+        //    .AddHttpMessageHandler<KeycloakAuthHandler>();
         return services;
     }
 }
