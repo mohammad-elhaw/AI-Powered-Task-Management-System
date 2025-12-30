@@ -21,6 +21,9 @@ public class CreateUserHandler
 
         try
         {
+            var email = Domain.ValueObjects.Email.Create(command.Email);
+            var fullName = Domain.ValueObjects.FullName.Create(command.FirstName, command.LastName);
+
             string tempPassword = "12345";
             var keycloakIdResult = await identityProvider.CreateUser(
                 new Request(
@@ -34,12 +37,13 @@ public class CreateUserHandler
             if(keycloakIdResult.IsFailure)
                 return Result<CreateUserResult>.Failure(keycloakIdResult.Error);
 
+            
+            var user = User.Create(
+                Guid.NewGuid(), 
+                keycloakIdResult.Value!,
+                email, fullName);
+
             createdKeycloadId = keycloakIdResult.Value!;
-
-            var user = User.Create(Guid.NewGuid(), keycloakIdResult.Value!, 
-                Domain.ValueObjects.Email.Create(command.Email),
-                Domain.ValueObjects.FullName.Create(command.FirstName, command.LastName));
-
             createdUser = user;
 
             if (command.RoleNames != null && command.RoleNames.Count != 0)

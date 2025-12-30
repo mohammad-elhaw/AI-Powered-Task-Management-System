@@ -3,6 +3,7 @@ using Shared.Application.Results;
 
 namespace Identity.API;
 
+[ApiController]
 public abstract class BaseController : ControllerBase
 {
     protected static Result<TResponse> MapResult<TSource, TResponse>(

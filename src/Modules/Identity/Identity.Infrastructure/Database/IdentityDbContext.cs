@@ -2,7 +2,7 @@
 using Identity.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Shared.Infrastructure;
-using Shared.Infrastructure.Events;
+using Shared.Infrastructure.EventDispatcher;
 
 namespace Identity.Infrastructure.Database;
 

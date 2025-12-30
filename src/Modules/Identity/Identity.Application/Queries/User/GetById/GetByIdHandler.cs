@@ -12,22 +12,33 @@ public class GetByIdHandler(
 {
     public async Task<Result<GetByIdResult>> Handle(GetByIdQuery query, CancellationToken cancellationToken)
     {
-        var user = await userRepo.GetById(query.UserId, cancellationToken);
+        try
+        {
+            var user = await userRepo.GetById(query.UserId, cancellationToken);
 
-        if (user is null)
-            return Result<GetByIdResult>.Failure(UserErrors.UserNotFound);
+            if (user is null)
+                return Result<GetByIdResult>.Failure(UserErrors.UserNotFound);
 
-        var roleNames = user.UserRoles
-            .Select(u => u.Role.Name)
-            .ToList();
+            var roleNames = user.UserRoles
+                .Select(u => u.Role.Name)
+                .ToList();
 
-        return Result<GetByIdResult>.Success(new GetByIdResult(new UserDto(
-            user.Id,
-            user.KeycloakId,
-            user.Email.Value,
-            user.Name.FirstName,
-            user.Name.LastName,
-            user.IsActive,
-            roleNames)));
+            return Result<GetByIdResult>.Success(new GetByIdResult(new UserDto(
+                user.Id,
+                user.KeycloakId,
+                user.Email.Value,
+                user.Name.FirstName,
+                user.Name.LastName,
+                user.IsActive,
+                roleNames)));
+        }
+        catch (Exception ex)
+        {
+            return Result<GetByIdResult>.Failure(
+                new Error(
+                    "GetUserById.Error", 
+                    "UnexpectedError", 
+                    ex.Message));
+        }
     }
 }

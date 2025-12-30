@@ -10,6 +10,7 @@ using Identity.Infrastructure.Services.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Messaging;
 
 namespace Identity.Infrastructure;
 
@@ -24,6 +25,8 @@ public static class ServiceCollectionExtension
         {
             opts.UseNpgsql(config.GetConnectionString("IdentityDatabase"));
         });
+
+        services.AddCapMessaging<IdentityDbContext>(config);
 
         services.AddScoped<IRoleRepository, EfRoleRepository>();
         services.AddScoped<IUserRepository, EfUserRepository>();

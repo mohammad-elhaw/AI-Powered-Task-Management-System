@@ -11,9 +11,9 @@ public class DeleteUserEndpoint(IMediator mediator)
     [HttpDelete("{UserId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> DeleteUser(Guid UserId)
+    public async Task<ActionResult<Unit>> DeleteUser(Guid UserId)
     {
-        await mediator.Send(new DeleteUserCommand(UserId));
-        return NoContent();
+        var result =await mediator.Send(new DeleteUserCommand(UserId));
+        return HandleResult(result, StatusCodes.Status204NoContent);
     }
 }

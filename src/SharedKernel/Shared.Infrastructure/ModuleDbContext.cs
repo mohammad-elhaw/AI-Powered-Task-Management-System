@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Abstractions;
-using Shared.Infrastructure.Events;
+using Shared.Infrastructure.EventDispatcher;
 
 namespace Shared.Infrastructure;
 
@@ -9,10 +9,6 @@ public class ModuleDbContext(DbContextOptions options,
 {
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-
-        //we need to pass transaction to cap 
-        using var transaction = await Database.BeginTransactionAsync(cancellationToken);
-
         var domainEvents = ChangeTracker
             .Entries<AggregateRoot<Guid>>()
             .Select(e => e.Entity)
@@ -24,14 +20,11 @@ public class ModuleDbContext(DbContextOptions options,
             entry.Entity.ClearDomainEvents();
         }
 
+        var result =await base.SaveChangesAsync(cancellationToken);
+
         if (domainEvents.Count != 0 && dispatcher != null)
             await dispatcher.Dispatch(domainEvents);    
-        
-        var modifiedRowCount =await base.SaveChangesAsync(cancellationToken);
 
-        await transaction.CommitAsync(cancellationToken);
-
-        return modifiedRowCount;
-       
+        return result;
     }
 }

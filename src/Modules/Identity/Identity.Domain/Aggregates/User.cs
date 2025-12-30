@@ -1,4 +1,5 @@
 ﻿using Identity.Domain.Entities;
+using Identity.Domain.Events;
 using Identity.Domain.Exceptions.User;
 using Identity.Domain.ValueObjects;
 using Shared.Domain.Abstractions;
@@ -55,7 +56,7 @@ public class User : AggregateRoot<Guid>
         if (!_userRoles.Any(ur => ur.RoleId == role.Id))
             _userRoles.Add(new UserRole(this, role));
 
-        //this.RaiseDomainEvent(new UserRoleAssignedDomainEvent(Id, roleId));
+        RaiseDomainEvent(new RoleAssignedDomainEvent(Id, role.Name));
     }
 
     public void RemoveRole(Role role)
