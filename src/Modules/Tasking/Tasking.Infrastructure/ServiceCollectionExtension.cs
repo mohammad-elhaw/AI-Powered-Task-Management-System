@@ -22,6 +22,7 @@ public static class ServiceCollectionExtension
         
         services.AddScoped<RoleAssignedIntegrationEventHandler>();
         services.AddScoped<UserCreatedIntegrationEventHandler>();
+        services.AddScoped<UserDeactivatedIntegrationEventHandler>();
         services.AddCapMessaging<TaskingDbContext>(config);
 
         services.AddScoped<ITaskRepository, TaskRepository>();

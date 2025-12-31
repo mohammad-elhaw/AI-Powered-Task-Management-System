@@ -43,7 +43,9 @@ internal sealed class KeyCloakIdentityProvider(
         
     }
 
-    
+    public async Task Deactivate(string keyCloakUserId, CancellationToken cancellationToken)
+        => await users.DeactivateUser(keyCloakUserId, cancellationToken);
+
     public async Task DeleteUser(string keyCloakUserId, CancellationToken cancellationToken)
         => await users.DeleteUser(keyCloakUserId, cancellationToken);
 

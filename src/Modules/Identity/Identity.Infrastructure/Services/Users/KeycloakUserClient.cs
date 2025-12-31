@@ -39,6 +39,18 @@ internal sealed class KeycloakUserClient(
         return id;
     }
 
+    public async Task DeactivateUser(string keyCloakUserId, CancellationToken cancellationToken)
+    {
+        var deactivateEndpoint = "/admin/realms/{{0}}/users/{0}";
+        var path = string.Format(deactivateEndpoint, keyCloakUserId);
+        var payload = new
+        {
+            enabled = false
+        };
+        await keycloakClient.SendAsync<HttpResponseMessage>(
+            new BaseRequest(path, body: payload, method: HttpMethod.Put), cancellationToken);
+    }
+
     public async Task DeleteUser(string keyCloakUserId, CancellationToken cancellationToken)
     {
         var deleteEndpoint = "/admin/realms/{{0}}/users/{0}";

@@ -39,6 +39,7 @@ public class User : AggregateRoot<Guid>
     public void Deactivate()
     {
         IsActive = false;
+        RaiseDomainEvent(new UserDeactivatedDomainEvent(Id));
     }
 
     public void Activate()
