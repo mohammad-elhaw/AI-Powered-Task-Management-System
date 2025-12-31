@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Infrastructure;
 using Shared.Infrastructure.EventDispatcher;
+using Tasking.Infrastructure.Projections;
 
 namespace Tasking.Infrastructure.Database;
 
@@ -20,4 +21,5 @@ public class TaskingDbContext(
 
     public DbSet<Domain.Aggregates.Task> Tasks => Set<Domain.Aggregates.Task>();
     public DbSet<Domain.ReadModels.TaskingUserRole> UserRoles => Set<Domain.ReadModels.TaskingUserRole>();
+    public DbSet<TaskingUserProjection> TaskingUsers => Set<TaskingUserProjection>();
 }

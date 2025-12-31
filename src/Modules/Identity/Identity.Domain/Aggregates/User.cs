@@ -32,7 +32,7 @@ public class User : AggregateRoot<Guid>
             Name = name
         };
 
-        //user.RaiseDomainEvent()
+        user.RaiseDomainEvent(new UserCreatedDomainEvent(id));
         return user;
     }
 
@@ -64,7 +64,7 @@ public class User : AggregateRoot<Guid>
         var userRole = _userRoles.FirstOrDefault(ur => ur.RoleId == role.Id);
         if(userRole != null) _userRoles.Remove(userRole);
 
-        //this.RaiseDomainEvent(new UserRoleRemovedDomainEvent(Id, roleId));
+        //this.RaiseDomainEvent(new RoleRemovedDomainEvent(Id, roleId));
     }
 
 }
