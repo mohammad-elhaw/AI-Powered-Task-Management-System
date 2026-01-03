@@ -28,6 +28,11 @@ public class TaskingUserProjection
         IsActive = false;
     }
 
+    public void Activate()
+    {
+        IsActive = true;
+    }
+
     public void UpdateProfile(string displayName, string email)
     {
         DisplayName = displayName;

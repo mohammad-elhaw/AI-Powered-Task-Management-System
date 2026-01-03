@@ -45,6 +45,7 @@ public class User : AggregateRoot<Guid>
     public void Activate()
     {
         IsActive = true;
+        RaiseDomainEvent(new UserActivatedDomainEvent(Id));
     }
 
     public void UpdateEmail(Email newEmail)

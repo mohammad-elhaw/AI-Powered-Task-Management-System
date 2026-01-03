@@ -8,6 +8,7 @@ public interface IIdentityProvider
     Task<Result<string>> CreateUser(CreateUser.Request request, CancellationToken cancellationToken);
     Task DeleteUser(string keyCloakUserId, CancellationToken cancellationToken);
     Task Deactivate(string keyCloakUserId, CancellationToken cancellationToken);
+    Task Activate(string keyCloakUserId, CancellationToken cancellationToken);
     Task<Response> GetAllUsers(CancellationToken cancellationToken);
     Task AssignRole(string keyCloakUserId, string roleName, CancellationToken cancellationToken);
     Task EnsureRealmRoleExists(string roleName, CancellationToken cancellationToken);
