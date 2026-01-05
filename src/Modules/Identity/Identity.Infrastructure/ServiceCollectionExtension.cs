@@ -26,7 +26,7 @@ public static class ServiceCollectionExtension
             opts.UseNpgsql(config.GetConnectionString("IdentityDatabase"));
         });
 
-        services.AddCapMessaging<IdentityDbContext>(config);
+        services.AddCapPublisher<IdentityDbContext>(config);
 
         services.AddScoped<IRoleRepository, EfRoleRepository>();
         services.AddScoped<IUserRepository, EfUserRepository>();
@@ -46,8 +46,6 @@ public static class ServiceCollectionExtension
 
         services.AddScoped<IClient, Client>();
 
-        //services.AddHttpClient<KeycloakRoleClient>()
-        //    .AddHttpMessageHandler<KeycloakAuthHandler>();
         return services;
     }
 }

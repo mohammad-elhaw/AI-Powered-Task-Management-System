@@ -29,7 +29,6 @@ public class TaskRepository(TaskingDbContext context) : ITaskRepository
         => await context.Tasks
             .Include(t => t.Items)
             .Include(t => t.Comments)
-            .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Id == taskId, cancellationToken);
     // we will return result object directly if null
 

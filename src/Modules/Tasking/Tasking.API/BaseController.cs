@@ -2,6 +2,7 @@
 
 namespace Tasking.API;
 
+[ApiController]
 public abstract class BaseController : ControllerBase
 {
 }

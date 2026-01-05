@@ -7,6 +7,10 @@
     <Project Path="Modules/Identity/Identity.Domain/Identity.Domain.csproj" Id="a3ab7e33-9aea-4369-9bbb-012e87e7cd09" />
     <Project Path="Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" Id="8b01e500-b135-469b-b7a2-ee85dddf3120" />
   </Folder>
+  <Folder Name="/Modules/Notifications/">
+    <Project Path="Modules/Notifications/Notifications.Application/Notifications.Application.csproj" Id="b2299dc5-b9e3-4eab-a701-009a9e8c121b" />
+    <Project Path="Modules/Notifications/Notifications.Infrastructure/Notifications.Infrastructure.csproj" Id="2131a923-eb19-4ba4-9780-ea855164afa5" />
+  </Folder>
   <Folder Name="/Modules/Tasking/">
     <Project Path="Modules/Tasking/Tasking.API/Tasking.API.csproj" Id="903ba9c2-293a-46b1-b29f-1d622116a2ae" />
     <Project Path="Modules/Tasking/Tasking.Application/Tasking.Application.csproj" Id="913369f3-ace9-4ed0-8aba-426a6533d16f" />

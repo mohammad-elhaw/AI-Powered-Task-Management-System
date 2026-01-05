@@ -8,6 +8,7 @@ namespace Tasking.Domain.Aggregates;
 
 public class Task : AggregateRoot<Guid>
 {
+    public Guid AssignedUserId { get; private set; }
     public TaskTitle Title { get; private set; }
     public TaskDescription Description { get; private set; }
     public Priority Priority { get; private set; }
@@ -38,14 +39,27 @@ public class Task : AggregateRoot<Guid>
             DueDate = dueDate,
             Status = Enums.TaskStatus.Pending
         };
-        //Todo: we must add AssignedUserId property and set it here
+
         task.RaiseDomainEvent(
             new TaskCreatedDomainEvent(
-                task.Id,
                 task.Id,
                 task.Title.Value));
 
         return task;
+    }
+
+    public void AssignUser(Guid userId)
+    {
+        if(Guid.Empty == userId)
+            throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+
+        if(Status == Enums.TaskStatus.Completed)
+            throw new InvalidOperationException("Cannot assign a user to a completed task.");
+
+        AssignedUserId = userId;
+        RaiseDomainEvent(new TaskAssignedDomainEvent(Id, userId));
+        // we need to handle this event and send integration event in notification
+        // module to send notification to the user that a new task has been assigned to them.
     }
 
     public void AddItem(string content)

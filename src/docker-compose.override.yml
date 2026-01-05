@@ -50,3 +50,10 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+  
+  papercut:
+    container_name: papercut
+    ports:
+      - "25:25"
+      - "37408:37408"
+    restart: unless-stopped

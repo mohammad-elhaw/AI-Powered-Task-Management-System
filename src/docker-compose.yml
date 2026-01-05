@@ -7,6 +7,8 @@ services:
     image: quay.io/keycloak/keycloak:26.4.1
   messagebus:
     image: rabbitmq:management
+  papercut:
+    image: jijiechen/papercut:latest
 
 volumes:
   postgres_taskManagementSystemDb:

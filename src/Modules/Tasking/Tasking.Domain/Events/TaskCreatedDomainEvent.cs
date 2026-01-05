@@ -2,5 +2,5 @@
 
 namespace Tasking.Domain.Events;
 
-public record TaskCreatedDomainEvent(Guid TaskId, Guid AssignedUserId, string Title)
+public record TaskCreatedDomainEvent(Guid TaskId, string Title)
     : IDomainEvent;

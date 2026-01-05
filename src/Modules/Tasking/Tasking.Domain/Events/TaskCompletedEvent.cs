@@ -2,4 +2,4 @@
 
 namespace Tasking.Domain.Events;
 
-public record TaskCompletedEvent(Aggregates.Task task) : IDomainEvent;
+public record TaskCompletedEvent(Aggregates.Task Task) : IDomainEvent;
