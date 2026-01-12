@@ -1,5 +1,6 @@
 ﻿using Identity.Application.Abstractions;
 using Identity.Application.Abstractions.IdentityProvider;
+using Identity.Application.Abstractions.Permissions;
 using Identity.Domain.Repositories;
 using Identity.Infrastructure.Database;
 using Identity.Infrastructure.Repositories;
@@ -10,6 +11,7 @@ using Identity.Infrastructure.Services.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Application.Security;
 using Shared.Messaging;
 
 namespace Identity.Infrastructure;
@@ -31,6 +33,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<IRoleRepository, EfRoleRepository>();
         services.AddScoped<IUserRepository, EfUserRepository>();
         services.AddScoped<IUserReadRepository, UserReadRepository>();
+        services.AddScoped<IUserPermissionsRepository, UserPermissionsRepository>();
+        services.AddScoped<IUserPermissionService, UserPermissionService>();
 
         services.AddScoped<IIdentityProvider, KeyCloakIdentityProvider>();
         services.AddScoped<IKeycloakTokenProvider, KeycloakTokenProvider>();

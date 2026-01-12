@@ -1,7 +1,7 @@
 using Identity.API;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Notifications.Infrastructure;
 using Shared.Infrastructure;
+using Shared.Infrastructure.Security;
 using Tasking.API;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,19 +23,9 @@ builder.Services.AddSharedInfrastructure(
     typeof(Identity.Application.ServiceCollectionExtension).Assembly);
 
 
-var app = builder.Build();
+builder.Services.AddKeycloakAuthentication(builder.Configuration);
 
-var adp = app.Services.GetService<IActionDescriptorCollectionProvider>();
-if (adp != null)
-{
-    foreach (var ad in adp.ActionDescriptors.Items)
-    {
-        var route = ad.AttributeRouteInfo?.Template ?? "(no route)";
-        var controller = ad.RouteValues.TryGetValue("controller", out var c) ? c : "(no controller)";
-        var action = ad.RouteValues.TryGetValue("action", out var a) ? a : "(no action)";
-        Console.WriteLine($"Route: {route}  --> {controller}.{action}");
-    }
-}
+var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

@@ -68,6 +68,7 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options,
             b.ToTable("Permissions");
             b.HasKey(p => p.Id);
             b.Property(p => p.Name).HasMaxLength(200).IsRequired();
+            b.Property(p => p.Code).HasMaxLength(100).IsRequired();
         });
 
         // UserRole (join table)
@@ -84,6 +85,21 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options,
             b.HasOne(ur => ur.Role)
                 .WithMany()
                 .HasForeignKey(ur => ur.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // RolePermission (join table)
+        modelBuilder.Entity<RolePermission>(b =>
+        {
+            b.ToTable("RolePermissions");
+            b.HasKey(rp => new { rp.RoleId, rp.PermissionId });
+            b.HasOne(rp => rp.Role)
+                .WithMany(r => r.Permissions)
+                .HasForeignKey(rp => rp.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(rp => rp.Permission)
+                .WithMany()
+                .HasForeignKey(rp => rp.PermissionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }

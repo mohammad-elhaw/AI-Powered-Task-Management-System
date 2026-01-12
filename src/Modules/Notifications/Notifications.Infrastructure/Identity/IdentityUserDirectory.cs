@@ -8,10 +8,7 @@ public sealed class IdentityUserDirectory(
     : IUserDirectory
 {
     public async Task<UserContact?> GetUserContact(Guid userId)
-    {
-        //var user = await httpClient.GetFromJsonAsync<IdentityUserResponse>(
-        //    $"api/users/{userId}");
-        
+    {   
         using var response = await httpClient.GetAsync($"api/users/{userId}");
         
         if (!response.IsSuccessStatusCode) return null;

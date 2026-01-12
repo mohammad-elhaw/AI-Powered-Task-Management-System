@@ -7,8 +7,8 @@ namespace Identity.Domain.Aggregates;
 public class Role : AggregateRoot<Guid>
 {
     public string Name { get; private set; }
-    private readonly List<Permission> _permissions = [];
-    public IReadOnlyList<Permission> Permissions => _permissions.AsReadOnly();
+    private readonly List<RolePermission> _permissions = [];
+    public IReadOnlyList<RolePermission> Permissions => _permissions.AsReadOnly();
 
     private Role() { }
 
@@ -26,8 +26,8 @@ public class Role : AggregateRoot<Guid>
 
     public void AddPermission(Permission permission)
     {
-        if (!_permissions.Any(p => p.Id == permission.Id))
-            _permissions.Add(permission);
+        if (!_permissions.Any(p => p.PermissionId == permission.Id))
+            _permissions.Add(new RolePermission(this, permission));
     }
 
 }

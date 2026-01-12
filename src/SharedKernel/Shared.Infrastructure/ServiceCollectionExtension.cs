@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Shared.Application.Security;
 using Shared.Infrastructure.EventDispatcher;
+using Shared.Infrastructure.Security;
 using System.Reflection;
 
 namespace Shared.Infrastructure;
@@ -19,6 +21,8 @@ public static class ServiceCollectionExtension
         });
 
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<IUserContextProvider, UserContextProvider>();
 
         return services;
     }

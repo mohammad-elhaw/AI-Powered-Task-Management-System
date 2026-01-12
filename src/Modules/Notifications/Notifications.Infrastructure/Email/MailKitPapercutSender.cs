@@ -15,7 +15,7 @@ public class MailKitPapercutSender : IEmailSender
         message.Body = new TextPart("html") { Text = htmlbody };
 
         using var client = new SmtpClient();
-        await client.ConnectAsync("localhost", 25, false, cancellationToken); // Papercut default
+        await client.ConnectAsync("localhost", 25, false, cancellationToken);
         await client.SendAsync(message, cancellationToken);
         await client.DisconnectAsync(true, cancellationToken);
     }

@@ -58,8 +58,6 @@ public class Task : AggregateRoot<Guid>
 
         AssignedUserId = userId;
         RaiseDomainEvent(new TaskAssignedDomainEvent(Id, userId));
-        // we need to handle this event and send integration event in notification
-        // module to send notification to the user that a new task has been assigned to them.
     }
 
     public void AddItem(string content)
