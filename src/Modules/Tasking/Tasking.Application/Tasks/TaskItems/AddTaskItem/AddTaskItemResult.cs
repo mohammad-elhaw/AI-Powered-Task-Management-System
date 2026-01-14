@@ -1,4 +1,4 @@
-﻿namespace Tasking.Application.Tasks.TaskItmes.AddTaskItem;
+﻿namespace Tasking.Application.Tasks.TaskItems.AddTaskItem;
 
 public record AddTaskItemResult(TaskItemDto TaskItemDto);
 

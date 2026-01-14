@@ -1,5 +1,5 @@
-﻿using Tasking.Application.Tasks.Comments;
-using Tasking.Application.Tasks.TaskItmes.AddTaskItem;
+﻿using Tasking.Application.Tasks.TaskComments;
+using Tasking.Application.Tasks.TaskItems.AddTaskItem;
 
 namespace Tasking.API.Task.Create;
 

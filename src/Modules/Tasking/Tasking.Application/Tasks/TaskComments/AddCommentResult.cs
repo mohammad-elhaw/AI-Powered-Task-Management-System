@@ -1,4 +1,4 @@
-﻿namespace Tasking.Application.Tasks.Comments;
+﻿namespace Tasking.Application.Tasks.TaskComments;
 
 public record AddCommentResult(CommentDto CommentDto);
 

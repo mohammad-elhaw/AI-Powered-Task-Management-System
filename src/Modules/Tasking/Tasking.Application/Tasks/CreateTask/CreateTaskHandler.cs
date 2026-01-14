@@ -1,9 +1,9 @@
 ﻿using Shared.Application.Abstractions.CQRS;
 using Shared.Application.Results;
 using Shared.Application.Security;
-using Tasking.Application.Tasks.Comments;
 using Tasking.Application.Tasks.Security.Authorization.CreateTask;
-using Tasking.Application.Tasks.TaskItmes.AddTaskItem;
+using Tasking.Application.Tasks.TaskComments;
+using Tasking.Application.Tasks.TaskItems.AddTaskItem;
 using Tasking.Domain.Enums;
 using Tasking.Domain.Repositories;
 using Tasking.Domain.ValueObjects;

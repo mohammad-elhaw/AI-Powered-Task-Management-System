@@ -2,7 +2,7 @@
 using Shared.Application.Results;
 using Tasking.Domain.Repositories;
 
-namespace Tasking.Application.Tasks.TaskItmes.AddTaskItem;
+namespace Tasking.Application.Tasks.TaskItems.AddTaskItem;
 
 internal class AddTaskItemHandler(ITaskRepository repository)
     : ICommandHandler<AddTaskItemCommand, AddTaskItemResult>
