@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Shared.Application.Results;
 using Shared.Application.Security;
 using System.Security.Claims;
 
@@ -9,16 +10,19 @@ public class UserContextProvider
     IUserPermissionService permissionService)
     : IUserContextProvider
 {
-    public async Task<UserContext> Get()
+    public async Task<Result<UserContext>> GetAsync()
     {
 
         if(http.HttpContext?.User?.Identity is null || !http.HttpContext.User.Identity.IsAuthenticated)
-            throw new UnauthorizedAccessException("User is not authenticated");
+            return Result<UserContext>.Failure(SecurityErrors.Unauthenticated);
 
-        var keycloakId = http.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value
-            ?? throw new UnauthorizedAccessException("User is not authenticated");
+        var keycloakId = http.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        
+        if(keycloakId is null)
+            return Result<UserContext>.Failure(SecurityErrors.Unauthenticated);
+
         var permissions = await permissionService.GetUserPermissions(keycloakId);
 
-        return new UserContext(keycloakId, permissions);
+        return Result<UserContext>.Success(new UserContext(keycloakId, permissions));
     }
 }

@@ -16,6 +16,7 @@ public class EfRoleRepository(IdentityDbContext context)
 
     public async Task<Role?> GetByName(string name, CancellationToken cancellationToken)
         => await context.Roles
+            .Include(r => r.Permissions)
             .FirstOrDefaultAsync(r => r.Name == name, cancellationToken);
 
     public async Task<int> SaveChanges(CancellationToken cancellationToken)

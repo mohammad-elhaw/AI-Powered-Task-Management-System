@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Tasking.Application.Commands.AssignUser;
+using Tasking.Application.Tasks.AssignUser;
 
 namespace Tasking.API.Task.AssignUser;
 

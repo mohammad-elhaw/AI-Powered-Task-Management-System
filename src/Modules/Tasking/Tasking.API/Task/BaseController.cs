@@ -13,8 +13,10 @@ public abstract class BaseController : API.BaseController
 
         return result.Error.Code switch
         {
-            "User.NotFound" => NotFound(result.Error),
-            "User.AlreadyExists" => Conflict(result.Error),
+            "Task.NotFound" => NotFound(result.Error),
+            "Task.AlreadyExists" => Conflict(result.Error),
+            "Auth.Unauthenticated" => Unauthorized(result.Error),
+            "Auth.Forbidden" => Forbid(),
             _ => BadRequest(result.Error)
         };
     }
@@ -25,8 +27,10 @@ public abstract class BaseController : API.BaseController
 
         return result.Error.Code switch
         {
-            "User.NotFound" => NotFound(result.Error),
-            "User.AlreadyExists" => Conflict(result.Error),
+            "Task.NotFound" => NotFound(result.Error),
+            "Task.AlreadyExists" => Conflict(result.Error),
+            "Auth.Unauthenticated" => Unauthorized(result.Error),
+            "Auth.Forbidden" => Forbid(),
             _ => BadRequest(result.Error)
         };
     }

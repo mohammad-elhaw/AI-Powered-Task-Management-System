@@ -1,9 +1,9 @@
 ﻿using Tasking.Application.Tasks.Comments;
 using Tasking.Application.Tasks.TaskItmes.AddTaskItem;
 
-namespace Tasking.API.Task.Create;
+namespace Tasking.Application.Tasks.CreateTask;
 
-public record CreateTaskResponse(TaskDto TaskDto);
+public record CreateTaskResult(TaskDto TaskDto);
 public record TaskDto(
     Guid Id,
     string Title,

@@ -1,6 +1,8 @@
-﻿namespace Shared.Application.Security;
+﻿using Shared.Application.Results;
+
+namespace Shared.Application.Security;
 
 public interface IUserContextProvider
 {
-    Task<UserContext> Get();
+    Task<Result<UserContext>> GetAsync();
 }

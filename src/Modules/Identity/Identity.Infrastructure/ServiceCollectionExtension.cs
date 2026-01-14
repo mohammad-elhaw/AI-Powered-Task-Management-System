@@ -8,10 +8,12 @@ using Identity.Infrastructure.Services;
 using Identity.Infrastructure.Services.KeycloakClient;
 using Identity.Infrastructure.Services.Roles;
 using Identity.Infrastructure.Services.Users;
+using Identity.Infrastructure.Startup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Security;
+using Shared.Infrastructure.Seeding;
 using Shared.Messaging;
 
 namespace Identity.Infrastructure;
@@ -21,14 +23,17 @@ public static class ServiceCollectionExtension
     public static IServiceCollection AddIdentityInfrastructure(this IServiceCollection services,
         IConfiguration config)
     {
-        // Add infrastructure services here (e.g., database context, repositories, etc.)
-
         services.AddDbContext<IdentityDbContext>(opts =>
         {
             opts.UseNpgsql(config.GetConnectionString("IdentityDatabase"));
         });
 
+        services.AddScoped<DbContext>(sp => sp.GetRequiredService<IdentityDbContext>());
+
         services.AddCapPublisher<IdentityDbContext>(config);
+
+        services.AddScoped<IDataSeeder, RoleSeeder>();
+        services.AddScoped<IModuleInitializer, IdentityModuleInitializer>();
 
         services.AddScoped<IRoleRepository, EfRoleRepository>();
         services.AddScoped<IUserRepository, EfUserRepository>();

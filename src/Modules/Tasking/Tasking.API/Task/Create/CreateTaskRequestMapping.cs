@@ -1,4 +1,4 @@
-﻿using Tasking.Application.Commands.CreateTask;
+﻿using Tasking.Application.Tasks.CreateTask;
 
 namespace Tasking.API.Task.Create;
 

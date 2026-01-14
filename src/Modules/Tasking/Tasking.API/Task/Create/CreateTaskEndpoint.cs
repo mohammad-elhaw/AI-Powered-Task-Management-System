@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Tasking.Application.Tasks.CreateTask;
 
 namespace Tasking.API.Task.Create;
 
@@ -8,9 +9,13 @@ public class CreateTaskEndpoint(IMediator mediator)
     : BaseController
 {
     [HttpPost]
-    public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request)
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<CreateTaskResult>> CreateTask([FromBody] CreateTaskRequest request)
     {
         var result = await mediator.Send(request.ToCommand());
-        return StatusCode(StatusCodes.Status201Created, result);
+        return HandleResult(result, StatusCodes.Status201Created);
     }
 }
