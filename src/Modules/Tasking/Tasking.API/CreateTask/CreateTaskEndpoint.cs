@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tasking.Application.Tasks.CreateTask;
 
-namespace Tasking.API.Task.Create;
+namespace Tasking.API.CreateTask;
 
 public class CreateTaskEndpoint(IMediator mediator)
     : BaseController

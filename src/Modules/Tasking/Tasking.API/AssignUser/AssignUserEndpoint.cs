@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tasking.Application.Tasks.AssignUser;
 
-namespace Tasking.API.Task.AssignUser;
+namespace Tasking.API.AssignUser;
 
 public class AssignUserEndpoint(IMediator mediator)
     : BaseController

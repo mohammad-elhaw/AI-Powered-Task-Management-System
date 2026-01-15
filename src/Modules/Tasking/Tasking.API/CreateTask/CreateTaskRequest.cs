@@ -1,7 +1,7 @@
-﻿using Tasking.API.TaskComment.Create;
-using Tasking.API.TaskItem.Create;
+﻿using Tasking.API.CreateTaskComment;
+using Tasking.API.CreateTaskItem;
 
-namespace Tasking.API.Task.Create;
+namespace Tasking.API.CreateTask;
 
 public record CreateTaskRequest
 {

@@ -1,6 +1,7 @@
 ﻿using Identity.Application.Abstractions;
 using Identity.Application.Abstractions.IdentityProvider;
 using Shared.Application.Abstractions.CQRS;
+using Shared.Application.Results;
 
 namespace Identity.Application.Queries.User.GetUsers;
 
@@ -9,7 +10,7 @@ public class GetUsersHandler(
     IUserReadRepository userReadRepository)
     : IQueryHandler<GetUsersQuery, GetUsersResult>
 {
-    public async Task<GetUsersResult> Handle(GetUsersQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetUsersResult>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
         var response = await identityProvider.GetAllUsers(cancellationToken);
 
@@ -35,6 +36,6 @@ public class GetUsersHandler(
             RoleNames: rolesDic.TryGetValue(u.KeycloakId, out var roles)
                 ? roles : [])).ToList();
 
-        return new GetUsersResult(usersToReturn);
+        return Result<GetUsersResult>.Success(new GetUsersResult(usersToReturn));
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Tasking.API.TaskItem.Create;
+﻿namespace Tasking.API.CreateTaskItem;
 
 public record CreateTaskItemResponse
 {

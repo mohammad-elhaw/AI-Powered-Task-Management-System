@@ -1,7 +1,7 @@
 ﻿using Tasking.Application.Tasks.TaskComments;
 using Tasking.Application.Tasks.TaskItems.AddTaskItem;
 
-namespace Tasking.API.Task.Create;
+namespace Tasking.API.CreateTask;
 
 public record CreateTaskResponse(TaskDto TaskDto);
 public record TaskDto(

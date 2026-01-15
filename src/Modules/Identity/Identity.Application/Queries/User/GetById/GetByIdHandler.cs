@@ -8,7 +8,7 @@ namespace Identity.Application.Queries.User.GetById;
 
 public class GetByIdHandler(
     IUserRepository userRepo)
-    : IQueryHandler<GetByIdQuery, Result<GetByIdResult>>
+    : IQueryHandler<GetByIdQuery, GetByIdResult>
 {
     public async Task<Result<GetByIdResult>> Handle(GetByIdQuery query, CancellationToken cancellationToken)
     {

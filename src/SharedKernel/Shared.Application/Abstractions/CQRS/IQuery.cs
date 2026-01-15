@@ -1,8 +1,9 @@
 ﻿using MediatR;
+using Shared.Application.Results;
 
 namespace Shared.Application.Abstractions.CQRS;
 
-public interface IQuery<out T> : IRequest<T>
-    where T : notnull
+public interface IQuery<TResponse> : IRequest<Result<TResponse>>
+    where TResponse : notnull
 {
 }

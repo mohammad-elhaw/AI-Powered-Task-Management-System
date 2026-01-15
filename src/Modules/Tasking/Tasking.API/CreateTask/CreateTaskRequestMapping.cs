@@ -1,6 +1,6 @@
 ﻿using Tasking.Application.Tasks.CreateTask;
 
-namespace Tasking.API.Task.Create;
+namespace Tasking.API.CreateTask;
 
 public static class CreateTaskRequestMapping
 {

@@ -14,9 +14,6 @@ public class GetAllUsersEndpoint(IMediator mediator)
     public async Task<ActionResult<GetAllUsersResponse>> GetAllUsers()
     {
         var result = await mediator.Send(new GetUsersQuery());
-        return Ok(new GetAllUsersResponse
-        (
-            result.ToGetAllUsersResponse().Data
-        ));
+        return HandleResult(result.ToGetAllUsersResponse(), StatusCodes.Status200OK);
     }
 }

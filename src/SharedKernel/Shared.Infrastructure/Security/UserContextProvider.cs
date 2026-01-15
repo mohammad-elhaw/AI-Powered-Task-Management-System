@@ -21,8 +21,11 @@ public class UserContextProvider
         if(keycloakId is null)
             return Result<UserContext>.Failure(SecurityErrors.Unauthenticated);
 
-        var permissions = await permissionService.GetUserPermissions(keycloakId);
+        var permissionsResult = await permissionService.GetUserPermissions(keycloakId);
 
-        return Result<UserContext>.Success(new UserContext(keycloakId, permissions));
+        if(permissionsResult.IsFailure)
+            return Result<UserContext>.Failure(permissionsResult.Error);
+
+        return Result<UserContext>.Success(new UserContext(keycloakId, permissionsResult.Value!));
     }
 }

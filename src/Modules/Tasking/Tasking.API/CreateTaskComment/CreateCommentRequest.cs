@@ -1,4 +1,4 @@
-﻿namespace Tasking.API.TaskComment.Create;
+﻿namespace Tasking.API.CreateTaskComment;
 
 public record CreateCommentRequest
 {

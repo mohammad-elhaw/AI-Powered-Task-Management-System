@@ -30,7 +30,6 @@ public class TaskRepository(TaskingDbContext context) : ITaskRepository
             .Include(t => t.Items)
             .Include(t => t.Comments)
             .FirstOrDefaultAsync(t => t.Id == taskId, cancellationToken);
-    // we will return result object directly if null
 
     public Task<int> SaveChanges(CancellationToken cancellationToken)
         => context.SaveChangesAsync(cancellationToken);
