@@ -1,4 +1,5 @@
 ﻿using Shared.Domain.Abstractions;
+using Tasking.Domain.Exceptions;
 
 namespace Tasking.Domain.Entities;
 
@@ -12,6 +13,9 @@ public class TaskItem : Entity<int>
 
     internal TaskItem(Guid taskId, string content)
     {
+        if(string.IsNullOrWhiteSpace(content))
+            throw new InvalidTaskItemContentException("Task item content cannot be null or empty.");
+
         TaskId = taskId;
         Content = content;
         IsCompleted = false;

@@ -2,6 +2,7 @@
 using Tasking.Domain.Entities;
 using Tasking.Domain.Enums;
 using Tasking.Domain.Events;
+using Tasking.Domain.Exceptions;
 using Tasking.Domain.ValueObjects;
 
 namespace Tasking.Domain.Aggregates;
@@ -51,10 +52,10 @@ public class Task : AggregateRoot<Guid>
     public void AssignUser(Guid userId)
     {
         if(Guid.Empty == userId)
-            throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+            throw new InvalidAssignUserException("User ID cannot be empty.");
 
         if(Status == Enums.TaskStatus.Completed)
-            throw new InvalidOperationException("Cannot assign a user to a completed task.");
+            throw new InvalidAssignUserException("Cannot assign a user to a completed task.");
 
         AssignedUserId = userId;
         RaiseDomainEvent(new TaskAssignedDomainEvent(Id, userId));

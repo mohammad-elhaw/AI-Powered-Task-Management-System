@@ -1,4 +1,5 @@
 ﻿using Shared.Domain.Abstractions;
+using Tasking.Domain.Exceptions;
 
 namespace Tasking.Domain.Entities;
 
@@ -11,6 +12,12 @@ public class Comment : Entity<int>
     private Comment() { }
     internal Comment(Guid taskId, string author, string content)
     {
+        if(string.IsNullOrEmpty(author))
+            throw new InvalidAuthorException("Author cannot be null or empty.");
+
+        if(string.IsNullOrEmpty(content))
+            throw new InvalidContentException("Content cannot be null or empty.");
+
         TaskId = taskId;
         Author = author;
         Content = content;
