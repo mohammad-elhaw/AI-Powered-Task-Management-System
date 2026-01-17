@@ -35,29 +35,29 @@ Modules:
 Each module strictly follows Clean Architecture:
 
 Domain
- ├─ Aggregates
- ├─ Entities
- ├─ Value Objects
- ├─ Domain Events
- └─ Business Rules
+    - Aggregates
+    - Entities
+    - Value Objects
+    - Domain Events
+    - Business Rules
 
 Application
- ├─ Commands & Queries (CQRS)
- ├─ MediatR handlers
- ├─ Authorization policies
- ├─ DTOs
- └─ Interfaces
+    - Commands & Queries (CQRS)
+    - MediatR handlers
+    - Authorization policies
+    - DTOs
+    - Interfaces
 
 Infrastructure
- ├─ EF Core
- ├─ Repositories
- ├─ External integrations
- ├─ RabbitMQ & CAP
- └─ Database migrations & seeding
+    - EF Core
+    - Repositories
+    - External integrations
+    - RabbitMQ & CAP
+    - Database migrations & seeding
 
 API
- ├─ Controllers
- └─ HTTP mapping only
+    - Controllers
+    - HTTP mapping only
  
 No layer depends inward on infrastructure or frameworks.
 
