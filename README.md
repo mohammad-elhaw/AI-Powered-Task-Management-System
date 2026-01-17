@@ -34,28 +34,28 @@ Modules:
 # Clean Architecture Layers (per module)
 Each module strictly follows Clean Architecture:
 
-Domain
+- Domain
     - Aggregates
     - Entities
     - Value Objects
     - Domain Events
     - Business Rules
 
-Application
+- Application
     - Commands & Queries (CQRS)
     - MediatR handlers
     - Authorization policies
     - DTOs
     - Interfaces
 
-Infrastructure
+- Infrastructure
     - EF Core
     - Repositories
     - External integrations
     - RabbitMQ & CAP
     - Database migrations & seeding
 
-API
+- API
     - Controllers
     - HTTP mapping only
  
