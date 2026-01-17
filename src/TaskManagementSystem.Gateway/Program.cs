@@ -1,46 +1,8 @@
-using Identity.API;
-using Notifications.Infrastructure;
-using Shared.Infrastructure;
-using Shared.Infrastructure.Security;
-using Shared.Infrastructure.Seeding;
-using Tasking.API;
+using TaskManagementSystem.Gateway.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers()
-    .AddApplicationPart(typeof(Tasking.API.ServiceCollectionExtension).Assembly)
-    .AddApplicationPart(typeof(Identity.API.ServiceCollectionExtension).Assembly)
-        .ConfigureApiBehaviorOptions(opts =>
-        {
-            opts.SuppressModelStateInvalidFilter = true;
-        });
-
-builder.Services.AddTaskingAPI(builder.Configuration);
-builder.Services.AddIdentityAPI(builder.Configuration);
-builder.Services.AddNotificationsInfrastructure(builder.Configuration);
-
-builder.Services.AddSharedInfrastructure(
-    typeof(Tasking.Application.ServiceCollectionExtension).Assembly,
-    typeof(Identity.Application.ServiceCollectionExtension).Assembly);
-
-
-builder.Services.AddKeycloakAuthentication(builder.Configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
-
-using var scope = app.Services.CreateScope();
-var scopedProvider = scope.ServiceProvider;
-var initializers = scopedProvider.GetServices<IModuleInitializer>();
-
-foreach(var module in initializers)
-    await module.MigrateAsync(scopedProvider);
-
-foreach(var module in initializers)
-    await module.SeedAsync(scopedProvider);
-
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
-
+await app.AddApplicationAsync();
 await app.RunAsync();
