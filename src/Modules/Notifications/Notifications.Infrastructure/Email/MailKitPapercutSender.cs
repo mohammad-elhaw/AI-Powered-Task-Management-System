@@ -17,6 +17,6 @@ public class MailKitPapercutSender : IEmailSender
         using var client = new SmtpClient();
         await client.ConnectAsync("localhost", 25, false, cancellationToken);
         await client.SendAsync(message, cancellationToken);
-        await client.DisconnectAsync(true, cancellationToken);
+        await client.DisconnectAsync(false, cancellationToken);
     }
 }
